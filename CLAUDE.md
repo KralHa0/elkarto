@@ -4,7 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-DIY drive-by-wire go-kart firmware for a **WeAct STM32F405RGT6** (Black Pill). Written in C/C++ using PlatformIO + STM32 HAL (stm32cube framework). Flashed via ST-Link V2 over SWD on the side header (PA13=SWDIO, PA14=SWCLK — the middle header was cut off).
+DIY drive-by-wire go-kart firmware for a **WeAct STM32F405RGT6** (Black Pill). Written in C/C++ using PlatformIO + bare metal register access (stm32cube framework for CMSIS headers). Flashed via ST-Link V2 over SWD on the side header (PA13=SWDIO, PA14=SWCLK — the middle header was cut off).
+
+**ST-Link wiring:** 5V → STM32 5V, GND → GND, SWDIO → PA13, SWCLK → PA14. Must use 5V (not 3.3V) — the onboard AMS1117 needs 5V in to regulate; feeding 3.3V into the 3.3V pin back-feeds the LDO and the board won't power up.
+
+**HAL note:** Always define `SysTick_Handler` calling `HAL_IncTick()` before `main()` — it must override the weak default for `HAL_Delay` to work.
 
 ## Commands
 
@@ -52,7 +56,7 @@ When the main firmware is developed, it will go in `src/` and `platformio.ini` s
 | PB0 | Hall effect speed sensor (A3144, 10k pull-up to 3.3V) |
 | PB6 | I2C1 SCL — PCA9685 + SSD1306 |
 | PB7 | I2C1 SDA — PCA9685 + SSD1306 |
-| PC13 | Onboard LED (active low) |
+| PB2 | Onboard LED (active low) |
 
 ## Key Subsystems
 
