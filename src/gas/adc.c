@@ -28,3 +28,4 @@ uint32_t adc1Read(void) {
     HAL_ADC_PollForConversion(&hadc, HAL_MAX_DELAY);
     return HAL_ADC_GetValue(&hadc);
 }
+
