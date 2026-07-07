@@ -24,13 +24,13 @@ void debugInit(void) {
     huart1.Init.HwFlowCtl  = UART_HWCONTROL_NONE;
     HAL_UART_Init(&huart1);
 
-    __HAL_RCC_GPIOA_CLK_ENABLE();
+    __HAL_RCC_GPIOB_CLK_ENABLE();
     GPIO_InitTypeDef ledgpio = {0};
-    ledgpio.Pin   = GPIO_PIN_4;
+    ledgpio.Pin   = GPIO_PIN_2;
     ledgpio.Mode  = GPIO_MODE_OUTPUT_PP;
     ledgpio.Pull  = GPIO_NOPULL;
     ledgpio.Speed = GPIO_SPEED_FREQ_LOW;
-    HAL_GPIO_Init(GPIOA, &ledgpio);
+    HAL_GPIO_Init(GPIOB, &ledgpio);
 }
 
 void debugPrint(const char *msg) {
@@ -38,6 +38,6 @@ void debugPrint(const char *msg) {
 }
 
 void debugBlink(uint32_t delay) {
-    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_4);
+    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_2);
     HAL_Delay(delay);
 }
