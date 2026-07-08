@@ -7,5 +7,5 @@ void brakeInit() {
 }
 
 void runBrake() {
-    // TODO: read brakeAdcRead(), PID against encoderGetPosition(), drive via brakeApply/brakeRelease/brakeHold
+    // TODO: read brakeAdcRead(), PID against encoderGetPosition(), drive via l298nForward/l298nReverse/l298nCoast
 }

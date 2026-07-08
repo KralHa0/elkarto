@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 void throttleInit(){
-    adc1Init();
+    gasAdcInit();
     pcaInit();
 
     char buf[32];

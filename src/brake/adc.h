@@ -1,7 +1,7 @@
 #pragma once
 #include "stm32f4xx_hal.h"
 
-// Brake pedal potentiometer, PC2 (ADC1 CH12)
+// Brake pedal potentiometer, PC2 (ADC2 CH12)
 
 void brakeAdcInit();
 uint32_t brakeAdcRead();

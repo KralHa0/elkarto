@@ -1,5 +1,5 @@
 #pragma once
 #include "stm32f4xx_hal.h"
 
-void adc1Init();
+void gasAdcInit();
 uint32_t adc1Read();
