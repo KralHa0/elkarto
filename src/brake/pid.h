@@ -10,4 +10,4 @@ typedef struct
 } PID;
 
 void pidInit(PID *pid, float kp, float ki, float kd, float outMin, float outMax);
-float pidUpdata(PID *pid, float setpoint, float measurment, float dt);
+float pidUpdate(PID *pid, float setpoint, float measurment, float dt);

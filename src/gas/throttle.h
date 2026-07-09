@@ -4,3 +4,4 @@
 
 void throttleInit();
 void runThrottle();
+uint16_t throttleGetAngle(void);

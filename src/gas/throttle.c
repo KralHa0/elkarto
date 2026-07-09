@@ -2,6 +2,8 @@
 #include "../debug/debug.h"
 #include <stdio.h>
 
+static uint16_t currentAngle = 0;
+
 void throttleInit(){
     gasAdcInit();
     pcaInit();
@@ -14,12 +16,10 @@ void throttleInit(){
 
 void runThrottle(){
     uint32_t val = adc1Read();
-    uint16_t angle = (uint16_t)((val * val) / 4095 * 180 / 4095);
-    setServoAngle(angle);
+    currentAngle = (uint16_t)((val * val) / 4095 * 180 / 4095);
+    setServoAngle(currentAngle);
+}
 
-    HAL_Delay(20);
-
-    //char buf[40];
-    //(buf, sizeof(buf), "Val: %lu  Angle: %u\r\n", val, angle);
-    //debugPrint(buf);
+uint16_t throttleGetAngle(void) {
+    return currentAngle;
 }

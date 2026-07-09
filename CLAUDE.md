@@ -20,7 +20,7 @@ pio run
 pio run --target upload
 
 # Build + flash
-pio run --target upload -e stm_blinker
+pio run --target upload -e main
 
 # Open serial monitor (if needed)
 pio device monitor
@@ -34,29 +34,47 @@ To run a single environment: `pio run -e <env_name>`
 ## Project Structure
 
 ```
-platformio.ini        # PlatformIO config; src_dir points at testers/ for test builds
-testers/stmTest.c     # Active blinker tester (PC13 LED, HAL, no RTOS)
-src/                  # Main firmware lives here (not yet created)
+platformio.ini          # STM32 PlatformIO project (src_dir = src)
+src/                     # Main firmware
+  main.c                 # Non-blocking scheduler: throttle (20ms), brake (100ms), telemetry (50ms)
+  gas/                    # Throttle: pedal ADC, PCA9685 servo driver, throttle.c ties them together
+  brake/                  # Brake: pedal ADC (ADC2), L298N driver, TIM3 encoder, pid.c, brake.c ties them together
+  debug/                  # USART1 (PA9/PA10) driver -- debugPrint (TX) and debugReadLine (interrupt-driven RX)
+  telemetry/              # CSV telemetry send + "K,<kp>,<ki>,<kd>" gain-update parsing, built on debug/'s UART
+  debug_motor_main.c       # Standalone L298N/motor bench-test firmware (bypasses pedal/PID/encoder entirely)
+testers/stmTest.c        # Older standalone blinker test, not part of any current build env
+
+esp32/                   # Independent PlatformIO project (ESP32-C3 SuperMini, Arduino framework)
+  src/main.cpp            # WiFi AP "gokart" + WebSocket server (port 81) + UART bridge to the STM32
+  laptop/monitor.py        # Python WebSocket client: prints telemetry, sends live PID gain updates
 ```
 
-When the main firmware is developed, it will go in `src/` and `platformio.ini` should be updated to add a separate `[env:main]` that points at `src/`.
+Two STM32 build environments in the root `platformio.ini`:
+- `[env:main]` — the real firmware (`pio run -e main`)
+- `[env:motor_debug]` — isolated L298N/motor bench test, only pulls in `debug_motor_main.c` + `brake/l298n.c` (`pio run -e motor_debug`)
+
+The `esp32/` folder is a separate PlatformIO project with its own `platformio.ini` (different toolchain/board) — build/flash it from inside `esp32/`, not from the repo root.
 
 ## Hardware Pin Map
 
 | Pin | Function |
 |-----|----------|
 | PA0 | L298N ENA — brake motor PWM (TIM2 CH1) |
-| PA1 | L298N IN1 — brake motor direction |
 | PA2 | L298N IN2 — brake motor direction |
-| PA3 | ADC1 CH3 — gas pedal potentiometer |
-| PA4 | ADC1 CH4 — brake pedal potentiometer |
-| PA5 | ADC1 CH5 — battery voltage divider |
+| PA4 | L298N IN1 — brake motor direction |
 | PA6 | TIM3 CH1 — encoder channel A |
 | PA7 | TIM3 CH2 — encoder channel B |
-| PB0 | Hall effect speed sensor (A3144, 10k pull-up to 3.3V) |
+| PA9 | USART1 TX — ESP32 RX (telemetry + live PID gain updates) |
+| PA10 | USART1 RX — ESP32 TX (telemetry + live PID gain updates) |
+| PA13 | ST-Link SWDIO |
+| PA14 | ST-Link SWCLK |
+| PB0 | Hall effect speed sensor (A3144, 10k pull-up to 3.3V) — not yet implemented in firmware |
+| PB1 | ADC1 CH9 — battery voltage divider — not yet implemented in firmware |
+| PB2 | Debug/onboard LED (active low) |
 | PB6 | I2C1 SCL — PCA9685 + SSD1306 |
 | PB7 | I2C1 SDA — PCA9685 + SSD1306 |
-| PB2 | Onboard LED (active low) |
+| PC0 | ADC1 CH10 — gas pedal potentiometer |
+| PC2 | ADC2 CH12 — brake pedal potentiometer |
 
 ## Key Subsystems
 

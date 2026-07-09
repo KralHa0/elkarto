@@ -10,7 +10,7 @@ void pidInit(PID *pid, float kp, float ki, float kd, float outMin, float outMax)
     pid->outMax = outMax;
 }
 
-float pidUpdata(PID *pid, float setpoint, float measurment, float dt){
+float pidUpdate(PID *pid, float setpoint, float measurment, float dt){
     float error = setpoint - measurment;
     pid->integral += error * dt;
     float derivative = (error - pid->prevError) / dt;
