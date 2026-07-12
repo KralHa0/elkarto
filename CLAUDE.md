@@ -59,9 +59,9 @@ The `esp32/` folder is a separate PlatformIO project with its own `platformio.in
 
 | Pin | Function |
 |-----|----------|
-| PA0 | L298N ENA — brake motor PWM (TIM2 CH1) |
-| PA2 | L298N IN2 — brake motor direction |
-| PA4 | L298N IN1 — brake motor direction |
+| PA0 | L298N ENB — brake motor PWM (TIM2 CH1) |
+| PA2 | L298N IN4 — brake motor direction |
+| PA4 | L298N IN3 — brake motor direction |
 | PA6 | TIM3 CH1 — encoder channel A |
 | PA7 | TIM3 CH2 — encoder channel B |
 | PA9 | USART1 TX — ESP32 RX (telemetry + live PID gain updates) |
@@ -81,9 +81,9 @@ The `esp32/` folder is a separate PlatformIO project with its own `platformio.in
 **Throttle:** Gas pedal pot → PID → PCA9685 (I2C 0x40) PWM0 → MG996R servo. Physical return spring closes throttle on power loss.
 
 **Brake:** Brake pedal pot → PID → L298N → JGB37-520 DC gear motor, driving a spindle that winds/unwinds the brake cable. Bicycle brake calipers are normally-open — their return spring pulls the brake released by default, so the motor must actively work against the spring to apply braking force, and must keep working against it to hold any partial/full-brake position (gearbox is not self-locking, so "hold" is continuous small corrective pulses via the position PID, not a static state). TIM3 in hardware encoder mode (11 PPR, quadrature) for position feedback.
-- Apply: IN1=HIGH, IN2=LOW, ENA=PWM (l298nForward)
-- Release: IN1=LOW, IN2=HIGH, ENA=PWM (l298nReverse)
-- Coast: IN1=LOW, IN2=LOW, ENA=0 (l298nCoast) — no active resistance; spring pulls toward released
+- Apply: IN3=HIGH, IN4=LOW, ENB=PWM (l298nForward)
+- Release: IN3=LOW, IN4=HIGH, ENB=PWM (l298nReverse)
+- Coast: IN3=LOW, IN4=LOW, ENB=0 (l298nCoast) — no active resistance; spring pulls toward released
 
 Since motor power loss means the spring releases the brake (fail-open, not fail-safe), a separate manual emergency brake lever (mechanical, independent of the STM32/motor system) is being added as the actual power-loss fail-safe.
 

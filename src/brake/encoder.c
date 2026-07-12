@@ -40,3 +40,7 @@ void encoderInit() {
 int32_t encoderGetPosition() {
     return (int16_t)__HAL_TIM_GET_COUNTER(&htim3);
 }
+
+void encoderReset(void) {
+    __HAL_TIM_SET_COUNTER(&htim3, 0);
+}

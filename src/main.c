@@ -6,6 +6,7 @@
 #include "brake/adc.h"
 #include "brake/encoder.h"
 #include "telemetry/telemetry.h"
+#include "battery/battery.h"
 
 void SysTick_Handler(void) { HAL_IncTick(); }
 
@@ -18,6 +19,8 @@ int main(void) {
     debugInit();
     throttleInit();
     brakeInit();
+    batteryInit();
+    // brakeHome(); // disabled -- brake/gas cables aren't connected to the motors yet
 
     uint32_t lastThrottle = 0, lastBrake = 0, lastTelemetry = 0;
 
@@ -34,8 +37,7 @@ int main(void) {
         }
         if (now - lastTelemetry >= TELEMETRY_PERIOD_MS) {
             lastTelemetry = now;
-            // DEBUG: speed/gas/battery fields temporarily repurposed as target/potRawInsideRunBrake/output for brake PID debugging
-            telemetrySend(now, brakeGetLastTarget(), brakeGetLastPotRaw(), brakeAdcRead(), throttleGetAngle(), encoderGetPosition(), brakeGetLastOutput());
+            telemetrySend(now, 0.0f /* no speed sensor yet */, adc1Read(), brakeAdcRead(), throttleGetAngle(), encoderGetPosition(), batteryReadVoltage());
         }
     }
 }

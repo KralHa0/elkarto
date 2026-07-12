@@ -7,3 +7,4 @@
 
 void encoderInit();
 int32_t encoderGetPosition();
+void encoderReset(void);
