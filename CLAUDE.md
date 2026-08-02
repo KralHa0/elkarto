@@ -68,7 +68,7 @@ The `esp32/` folder is a separate PlatformIO project with its own `platformio.in
 | PA10 | USART1 RX — ESP32 TX (telemetry + live PID gain updates) |
 | PA13 | ST-Link SWDIO |
 | PA14 | ST-Link SWCLK |
-| PB0 | Hall effect speed sensor (A3144, 10k pull-up to 3.3V) — not yet implemented in firmware |
+| PB0 | Hall effect speed sensor (A3144, 10k pull-up to 3.3V), EXTI0 falling edge |
 | PB1 | ADC1 CH9 — battery voltage divider — not yet implemented in firmware |
 | PB2 | Debug/onboard LED (active low) |
 | PB6 | I2C1 SCL — PCA9685 + SSD1306 |

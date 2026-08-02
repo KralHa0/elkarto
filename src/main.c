@@ -6,7 +6,7 @@
 #include "brake/adc.h"
 #include "brake/encoder.h"
 #include "telemetry/telemetry.h"
-#include "battery/battery.h"
+#include "speedSensor/speedSensor.h"
 
 void SysTick_Handler(void) { HAL_IncTick(); }
 
@@ -19,8 +19,8 @@ int main(void) {
     debugInit();
     throttleInit();
     brakeInit();
-    batteryInit();
-    // brakeHome(); // disabled -- brake/gas cables aren't connected to the motors yet
+    speedSensorInit();
+    brakeHome();
 
     uint32_t lastThrottle = 0, lastBrake = 0, lastTelemetry = 0;
 
@@ -37,7 +37,7 @@ int main(void) {
         }
         if (now - lastTelemetry >= TELEMETRY_PERIOD_MS) {
             lastTelemetry = now;
-            telemetrySend(now, 0.0f /* no speed sensor yet */, adc1Read(), brakeAdcRead(), throttleGetAngle(), encoderGetPosition(), batteryReadVoltage());
+            telemetrySend(now, speedGetKph(), adc1Read(), brakeAdcRead(), throttleGetAngle(), encoderGetPosition(), brakeGetLastTarget(), brakeGetLastOutput());
         }
     }
 }

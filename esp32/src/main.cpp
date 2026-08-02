@@ -14,8 +14,8 @@ static const char *AP_PASSWORD = "gokart123"; // WPA2, min 8 chars -- change bef
 WebSocketsServer webSocket(81);
 static String lineBuf;
 
-// STM32 telemetry lines are "timestamp,speed,gas,brake,servo_pos,motor_pos,battery"
-// (7 numeric fields, 6 commas). USART1 also carries stray debugPrint() boot text
+// STM32 telemetry lines are "timestamp,speed,gas,brake,servo_pos,motor_pos,target,output"
+// (8 numeric fields, 7 commas). USART1 also carries stray debugPrint() boot text
 // (e.g. "PCA: OK") -- only forward lines that actually look like telemetry so that
 // text doesn't corrupt the WebSocket client's stream.
 static bool isTelemetryLine(const String &line) {
@@ -25,7 +25,7 @@ static bool isTelemetryLine(const String &line) {
         if (c == ',') { commaCount++; continue; }
         if (!isDigit(c) && c != '.' && c != '-') return false;
     }
-    return commaCount == 6;
+    return commaCount == 7;
 }
 
 void webSocketEvent(uint8_t clientId, WStype_t type, uint8_t *payload, size_t length) {

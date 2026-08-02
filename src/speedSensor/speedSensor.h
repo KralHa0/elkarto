@@ -2,3 +2,4 @@
 #include "stm32f4xx_hal.h"
 
 void speedSensorInit();
+float speedGetKph(void);

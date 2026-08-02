@@ -18,7 +18,7 @@ from datetime import datetime
 
 import websockets
 
-FIELDS = ["timestamp_ms", "speed", "gas", "brake", "servo_pos", "motor_pos", "battery"]
+FIELDS = ["timestamp_ms", "speed", "gas", "brake", "servo_pos", "motor_pos", "target", "output"]
 
 
 def parse_telemetry(line: str):
@@ -45,10 +45,11 @@ async def receiver(ws):
             continue
 
         ts = datetime.now().strftime("%H:%M:%S")
+        error = telemetry["target"] - telemetry["motor_pos"]
         print(
-            f"[{ts}] speed={telemetry['speed']:.1f} gas={telemetry['gas']:.0f} "
-            f"brake={telemetry['brake']:.0f} servo={telemetry['servo_pos']:.0f} "
-            f"motor_pos={telemetry['motor_pos']:.0f} battery={telemetry['battery']:.2f}V"
+            f"[{ts}] gas={telemetry['gas']:.0f} brake={telemetry['brake']:.0f} servo={telemetry['servo_pos']:.0f} | "
+            f"target={telemetry['target']:.0f} motor_pos={telemetry['motor_pos']:.0f} error={error:+.0f} "
+            f"output={telemetry['output']:+.1f}"
         )
 
 
