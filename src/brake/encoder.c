@@ -2,7 +2,6 @@
 
 static TIM_HandleTypeDef htim3;
 
-// Done: init PA6/PA7 as TIM3 AF, configure TIM3 in encoder mode
 void encoderInit() {
     __HAL_RCC_GPIOA_CLK_ENABLE();
     __HAL_RCC_TIM3_CLK_ENABLE();

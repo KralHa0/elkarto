@@ -2,7 +2,6 @@
 
 static TIM_HandleTypeDef htim2;
 
-// Done: init PA0 (TIM2 CH1 PWM), PA2, PA4 as GPIO outputs
 void l298nInit() {
     __HAL_RCC_GPIOA_CLK_ENABLE();
     __HAL_RCC_TIM2_CLK_ENABLE();

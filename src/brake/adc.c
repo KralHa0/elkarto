@@ -1,7 +1,6 @@
 #include "adc.h"
 static ADC_HandleTypeDef hadc2;
 
-// Done: init PC2 as analog input, configure ADC2 CH12
 void brakeAdcInit() {
     __HAL_RCC_ADC2_CLK_ENABLE();
     __HAL_RCC_GPIOC_CLK_ENABLE();
@@ -23,7 +22,6 @@ void brakeAdcInit() {
     HAL_ADC_ConfigChannel(&hadc2, &channel);
 }
 
-// Done: read brake pedal position
 uint32_t brakeAdcRead() {
     HAL_ADC_Start(&hadc2);
     HAL_ADC_PollForConversion(&hadc2, HAL_MAX_DELAY);
